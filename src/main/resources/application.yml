@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: local
+server:
+  port: 8081
 
 ---
 spring:
@@ -8,10 +10,11 @@ spring:
   kafka:
     template:
       default-topic: library-events
-    producer:
+    consumer:
       bootstrap-servers: localhost:9092, localhost:9093, localhost:9094
-      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeSerializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeSerializer
+      group-id: library-events-listener-group
       properties:
         acks: all
         retries: 10
@@ -23,16 +26,18 @@ spring:
 spring:
   profiles: dev
   kafka:
-    producer:
+    consumer:
       bootstrap-servers: dev:9092, dev:9093, dev:9094
-      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeSerializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeSerializer
+      group-id: library-events-listener-group
 
 ---
 spring:
   profiles: prod
   kafka:
-    producer:
+    consumer:
       bootstrap-servers: prod:9092, prod:9093, prod:9094
-      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeSerializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeSerializer
+      group-id: library-events-listener-group
